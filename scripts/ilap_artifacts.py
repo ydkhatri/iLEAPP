@@ -48,6 +48,7 @@ from scripts.artifacts.dhcpl import get_dhcpl
 from scripts.artifacts.discordAcct import get_discordAcct
 from scripts.artifacts.discordJson import get_discordJson
 from scripts.artifacts.discordManifest import get_discordManifest
+from scripts.artifacts.FacebookMessenger import get_FacebookMessenger
 from scripts.artifacts.filesAppsclient import get_filesAppsclient
 from scripts.artifacts.filesAppsdb import get_filesAppsdb
 from scripts.artifacts.filesAppsm import get_filesAppsm
@@ -61,6 +62,8 @@ from scripts.artifacts.quickLook import get_quickLook
 from scripts.artifacts.iCloudWifi import get_iCloudWifi
 from scripts.artifacts.icloudSharedalbums import get_icloudSharedalbums
 from scripts.artifacts.iconsScreen import get_iconsScreen
+from scripts.artifacts.imoHD_Chat import get_imoHD_Chat
+from scripts.artifacts.instagramThreads import get_instagramThreads
 from scripts.artifacts.interactionCcontacts import get_interactionCcontacts
 from scripts.artifacts.keyboardAppUsage import get_keyboardAppUsage
 from scripts.artifacts.keyboardLexicon import get_keyboardLexicon
@@ -95,6 +98,7 @@ from scripts.artifacts.safariRecentWebSearches import get_safariRecentWebSearche
 from scripts.artifacts.safariTabs import get_safariTabs
 from scripts.artifacts.safariWebsearch import get_safariWebsearch
 from scripts.artifacts.screentimeAll import get_screentimeAll
+from scripts.artifacts.slack import get_slack
 from scripts.artifacts.sms import get_sms
 from scripts.artifacts.tileApp import get_tileApp
 from scripts.artifacts.tileAppDb import get_tileAppDb
@@ -116,6 +120,9 @@ from scripts.artifacts.appleWalletTransactions import get_appleWalletTransaction
 from scripts.artifacts.walStrings import get_walStrings
 from scripts.artifacts.webClips import get_webClips
 from scripts.artifacts.tcc import get_tcc
+from scripts.artifacts.teams import get_teams
+from scripts.artifacts.teamsSegment import get_teamsSegment 
+from scripts.artifacts.tikTok import get_tikTok
 from scripts.artifacts.tileAppNetDb import get_tileAppNetDb
 from scripts.artifacts.walStrings import get_walStrings
 from scripts.artifacts.weatherAppLocations import get_weatherAppLocations
@@ -141,7 +148,7 @@ tosearch = {'lastBuild': ('IOS Build', '*LastBuildInfo.plist'),
             'aggDictpasscodetype': ('Aggregate Dictionary', '*/AggregateDictionary/ADDataStore.sqlitedb'),
             'alarms': ('Alarms', '*private/var/mobile/Library/Preferences/com.apple.mobiletimerd.plist'),
             'appConduit': ('App Conduit', '**/AppConduit.log.*'),
-            'appGrouplisting': ('Installed Apps', ('*/private/var/mobile/Containers/Shared/AppGroup/*/*.metadata.plist', '**/PluginKitPlugin/*.metadata.plist')),
+            'appGrouplisting': ('Installed Apps', ('*/Containers/Shared/AppGroup/*/.com.apple.mobile_container_manager.metadata.plist', '**/PluginKitPlugin/*.metadata.plist')),
             'appItunesmeta': ('Installed Apps', ('**/iTunesMetadata.plist', '**/BundleMetadata.plist')),
             'appleMapsApplication': ('Locations', '**/Data/Application/*/Library/Preferences/com.apple.Maps.plist'),
             'appleMapsGroup': ('Locations', '**/Shared/AppGroup/*/Library/Preferences/group.com.apple.Maps.plist'),
@@ -175,6 +182,7 @@ tosearch = {'lastBuild': ('IOS Build', '*LastBuildInfo.plist'),
             'discordAcct': ('Discord', '*/var/mobile/Containers/Data/Application/*/Documents/mmkv/mmkv.default'),
             'discordJson': ('Discord', '*/com.hammerandchisel.discord/fsCachedData/*'),
             'discordManifest': ('Discord', '*/private/var/mobile/Containers/Data/Application/*/Documents/RCTAsyncLocalStorage_V1/manifest.json'),
+            'FacebookMessenger': ('Facebook Messenger', '**/lightspeed-*.db*'),
             'filesAppsclient': ('Files App', '*private/var/mobile/Library/Application Support/CloudDocs/session/db/client.db*'),
             'filesAppsdb': ('Files App', '*private/var/mobile/Library/Application Support/CloudDocs/session/db/server.db*'),
             'filesAppsm': ('Files App', '*private/var/mobile/Containers/Shared/AppGroup/*/smartfolders.db*'),
@@ -187,6 +195,8 @@ tosearch = {'lastBuild': ('IOS Build', '*LastBuildInfo.plist'),
             'icloudSharedalbums': ('iCloud Shared Albums', '*/private/var/mobile/Media/PhotoData/PhotoCloudSharingData/*'),
             'iCloudWifi': ('Wifi Connections', '**/com.apple.wifid.plist'),
             'iconsScreen': ('iOS Screens', '**/SpringBoard/IconState.plist'),
+            'imoHD_Chat': ('IMO HD Chat', ('**/IMODb2.sqlite*','private/var/mobile/Containers/Data/Application/*/Library/Caches/videos/*.webp')),
+            'instagramThreads':('Instagram', '*/mobile/Containers/Data/Application/*/Library/Application Support/DirectSQLiteDatabase/*.db*'),
             'interactionCcontacts': ('InteractionC', '**/interactionC.db'),
             'keyboardAppUsage': ('Keyboard', '*/private/var/mobile/Library/Keyboard/app_usage_database.plist'),
             'keyboardLexicon': ('Keyboard', '*/private/var/mobile/Library/Keyboard/*-dynamic.lm/dynamic-lexicon.dat'),
@@ -222,7 +232,11 @@ tosearch = {'lastBuild': ('IOS Build', '*LastBuildInfo.plist'),
             'safariWebsearch': ('Safari Browser', '**/Safari/History.db'),
             'screentimeAll': ('Screentime', '**/RMAdminStore-Local.sqlite'),
             'sms': ('SMS & iMessage', '**/sms.db'),
+            'slack': ('Slack', '*/var/mobile/Containers/Data/Application/*/Library/Application Support/Slack/*/Database/main_db*'),
             'tcc': ('App Permissions', '*TCC.db*'),
+            'teams': ('Microsoft Teams', ('*/var/mobile/Containers/Shared/AppGroup/*/SkypeSpacesDogfood/*/Skype*.sqlite*','*/var/mobile/Containers/Shared/AppGroup/*/SkypeSpacesDogfood/Downloads/*/Images/*')),
+            'teamsSegment': ('Microsoft Teams - Logs', '*/var/mobile/Containers/Data/Application/*/Library/DriveIQ/segments/current/*.*'),
+            'tikTok': ('TikTok', ('*/Application/*/Library/Application Support/ChatFiles/*/db.sqlite*', '*AwemeIM.db*')),
             'tileApp': ('Locations', '*private/var/mobile/Containers/Data/Application/*/Library/log/com.thetileapp.tile*'),
             'tileAppDb': ('Locations', '*private/var/mobile/Containers/Shared/AppGroup/*/com.thetileapp.tile-TileNetworkDB.sqlite*'),
             'tileAppDisc': ('Accounts','*/private/var/mobile/Containers/Shared/AppGroup/*/com.thetileapp.tile-DiscoveredTileDB.sqlite*'),
@@ -286,3 +300,4 @@ def process_artifact(files_found, artifact_func, artifact_name, seeker, report_f
     run_time_secs = end_time - start_time
     # run_time_HMS = strftime('%H:%M:%S', gmtime(run_time_secs))
     logfunc('{} [{}] artifact completed in time {} seconds'.format(artifact_name, artifact_func, run_time_secs))
+    
