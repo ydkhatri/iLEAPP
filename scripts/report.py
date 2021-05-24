@@ -223,7 +223,7 @@ def get_icon_name(category, artifact):
         icon = 'mic'
     elif category == 'VOICE-TRIGGERS':
         icon = 'mic'
-    elif category == 'WIFI CONNECTIONS':
+    elif category == 'WIFI KNOWN NETWORKS':
         icon = 'wifi'
     elif category == 'ICLOUD QUICK LOOK':
         icon = 'file'
@@ -256,6 +256,11 @@ def get_icon_name(category, artifact):
             icon = 'battery-charging'
         if artifact == 'TEAMS TIMEZONE':
             icon = 'clock'
+    elif category == 'WHATSAPP':
+        if artifact == 'WHATSAPP - MESSAGES':
+            icon = 'message-square'
+        if artifact == 'WHATSAPP - CONTACTS':
+            icon = 'users'
     elif category == 'MICROSOFT TEAMS':
         if artifact == 'TEAMS MESSAGES':
             icon = 'message-square'
@@ -509,5 +514,6 @@ def mark_item_active(data, itemname):
     else:
         ret = data[0: pos] + " active" + data[pos:]
         return ret
+    
     
     
